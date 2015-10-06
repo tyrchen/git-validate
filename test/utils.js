@@ -353,3 +353,56 @@ describe('installScript()', function () {
 
     afterEach(internals.cleanupFixture);
 });
+
+describe('installPkg()', function () {
+
+    beforeEach(internals.createFixture);
+
+    it('can install a pkg', function (done) {
+
+        Utils.installPkg('eslint', '*', { 'dev': false }, Path.join(internals.fixturePath, 'project2'));
+        var fixturePackage = JSON.parse(Fs.readFileSync(Path.join(internals.fixturePath, 'project2', 'package.json'), { encoding: 'utf8' }));
+        expect(fixturePackage).to.deep.equal({ dependencies: { eslint: '*' } });
+        done();
+    });
+
+    it('can install a pkg to an existing dependencies object', function (done) {
+
+        var packagePath = Path.join(internals.fixturePath, 'project2', 'package.json');
+        Fs.writeFileSync(packagePath, '{"devDependencies":{}}', { encoding: 'utf8' });
+        Utils.installPkg('eslint', '*', { 'dev': true }, Path.join(internals.fixturePath, 'project2'));
+        var fixturePackage = JSON.parse(Fs.readFileSync(packagePath, { encoding: 'utf8' }));
+        expect(fixturePackage).to.deep.equal({ devDependencies: { eslint: '*' } });
+        done();
+    });
+
+    it('does not overwrite an existing pkg', function (done) {
+
+        Utils.installPkg('eslint', '1.3.1', Path.join(internals.fixturePath, 'project2'));
+        var fixturePackageOne = JSON.parse(Fs.readFileSync(Path.join(internals.fixturePath, 'project2', 'package.json'), { encoding: 'utf8' }));
+        expect(fixturePackageOne).to.deep.equal({ dependencies: { eslint: '1.3.1' } });
+        Utils.installPkg('eslint', '*', Path.join(internals.fixturePath, 'project2'));
+        var fixturePackage = JSON.parse(Fs.readFileSync(Path.join(internals.fixturePath, 'project2', 'package.json'), { encoding: 'utf8' }));
+        expect(fixturePackage).to.deep.equal({ dependencies: { eslint: '1.3.1' } });
+        done();
+    });
+
+    it('overwrite an existing pkg when option is specified', function (done) {
+
+        Utils.installPkg('eslint', '1.3.1', {}, Path.join(internals.fixturePath, 'project2'));
+        var fixturePackageOne = JSON.parse(Fs.readFileSync(Path.join(internals.fixturePath, 'project2', 'package.json'), { encoding: 'utf8' }));
+        expect(fixturePackageOne).to.deep.equal({ dependencies: { eslint: '1.3.1' } });
+
+        Utils.installPkg('eslint', '1.6.0', {}, Path.join(internals.fixturePath, 'project2'));
+        var fixturePackageTwo = JSON.parse(Fs.readFileSync(Path.join(internals.fixturePath, 'project2', 'package.json'), { encoding: 'utf8' }));
+        expect(fixturePackageTwo).to.deep.equal({ dependencies: { eslint: '1.3.1' } });
+
+        Utils.installPkg('eslint', '1.6.0', { overwrite: true }, Path.join(internals.fixturePath, 'project2'));
+        var fixturePackage = JSON.parse(Fs.readFileSync(Path.join(internals.fixturePath, 'project2', 'package.json'), { encoding: 'utf8' }));
+        expect(fixturePackage).to.deep.equal({ dependencies: { eslint: '1.6.0' } });
+
+        done();
+    });
+
+    afterEach(internals.cleanupFixture);
+});

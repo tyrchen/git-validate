@@ -1,5 +1,5 @@
 {
-  "name": "git-validate",
+  "name": "git-validate-tyrchen",
   "version": "2.1.0",
   "description": "the extensible core of precommit-hook",
   "main": "index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/nlf/git-validate.git"
+    "url": "git://github.com/tyrchen/git-validate.git"
   },
   "keywords": [
     "precommit",
@@ -17,12 +17,12 @@
     "git",
     "hook"
   ],
-  "author": "Nathan LaFreniere <quitlahok@gmail.com>",
+  "author": "Tyr Chen <tyr.chen@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nlf/git-validate/issues"
+    "url": "https://github.com/tyrchen/git-validate/issues"
   },
-  "homepage": "https://github.com/nlf/git-validate",
+  "homepage": "https://github.com/tyrchen/git-validate",
   "devDependencies": {
     "code": "1.x.x",
     "lab": "5.x.x",
